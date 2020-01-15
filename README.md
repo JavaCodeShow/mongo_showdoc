@@ -25,7 +25,7 @@
       在cmd黑窗口下执行命令：
 
       ```
-   java -jar mongo_showdoc.jar from
+        java -jar mongo_showdoc.jar from
       ```
       
       from为models的目录路径
@@ -33,7 +33,7 @@
       例如：
       
       ```
-      java -jar mongo_showdoc.jar H:\ioam\service\src\models 
+        java -jar mongo_showdoc.jar H:\ioam\service\src\models 
       ```
 
 2. ## 注意事项
