@@ -24,6 +24,9 @@ import java.util.regex.Pattern;
 public class EntityToMarkdown {
     public static void main(String[] args) throws IOException {
         String dirName = judgeDirName(args);
+
+        // 判断是上传到showdoc还是本地。
+        String uploadPath = judgeUploadPath(args);
         List<String> entityFiles = getEntityFiles(dirName);
 
         // 遍历目录
@@ -50,13 +53,33 @@ public class EntityToMarkdown {
             // 转换为markdown语法
             String content = transObjToMarkdown(myFields, fileName);
 
-            // 上传到showdoc
-            saveToShowdoc(content, fileName);
-            System.out.println("上传结束");
-
-            // 保存文件到本地
-            saveContentToFile(content, fileName);
+            System.out.println("开始上传" + fileName + "表");
+            if (Objects.nonNull(uploadPath)) {
+                // 保存文件到本地
+                saveContentToFile(content, fileName);
+            } else {
+                // 上传到showdoc
+                saveToShowdoc(content, fileName);
+            }
+            System.out.println("上传" + fileName + "表成功");
         }
+        System.out.println("全部上传成功");
+    }
+
+    /**
+     * @param args
+     * @return null:showdoc    dir:本地
+     */
+    static String judgeUploadPath(String[] args) {
+        if (args.length > 1) {
+            String filedir = args[1];
+            File dir = new File(filedir);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            return dir.toString();
+        }
+        return null;
     }
 
     static String judgeDirName(String[] args) {
@@ -121,7 +144,9 @@ public class EntityToMarkdown {
         content.append("|字段信息 | 类型 | 必填 | 默认 | 备注信息 |" + "\r\n");
         content.append("|:----    |:-------    |:--- |-- -|------      |" + "\r\n");
         String str = content.toString();
+        System.out.println(str);
         str = addFieldContentToMarkdown(str, myFields);
+        System.out.println(str);
         return str;
     }
 
@@ -175,6 +200,8 @@ public class EntityToMarkdown {
         for (MyField myField : myFields) {
             content += "|" + myField.getName() + "|" + myField.getType() + "|" + myField.getRequired()
                     + "|" + myField.getDefaultValue() + "|" + myField.getComment() + "|\r\n";
+            System.out.println("-----");
+            System.out.println(content);
         }
         return content;
     }
@@ -274,10 +301,6 @@ public class EntityToMarkdown {
      * @return
      */
     static List<String> getEvenFieldContent(String fieldsContent) throws IOException {
-        if (StringUtils.isEmpty(fieldsContent)) {
-            return new ArrayList<String>();
-        }
-
         // 将字符串读取到字符流中
         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
                 fieldsContent.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
@@ -286,6 +309,9 @@ public class EntityToMarkdown {
         boolean isMatch = false;
         List<String> list = new ArrayList<String>();
         while ((line = br.readLine()) != null) {
+            if (StringUtils.isEmpty(line)) {
+                continue;
+            }
             if (line.startsWith("//")) {
                 tempString.append(line + "\n");
                 continue;
