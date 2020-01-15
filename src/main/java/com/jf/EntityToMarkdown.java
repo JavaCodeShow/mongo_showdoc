@@ -51,8 +51,9 @@ public class EntityToMarkdown {
 
             // 转换为markdown语法
             String content = transObjToMarkdown(myFields, fileName);
-            System.out.println(content);
             System.out.println("开始上传" + fileName + "表");
+            System.out.println();
+            System.out.println(content);
             if (Objects.nonNull(uploadPath)) {
                 // 保存文件到本地
                 String toPathName = uploadPath + "\\" + fileName + ".md";
@@ -62,6 +63,7 @@ public class EntityToMarkdown {
                 saveToShowdoc(content, fileName);
             }
             System.out.println("上传" + fileName + "表成功");
+            System.out.println();
         }
         System.out.println("全部上传成功");
     }
