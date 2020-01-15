@@ -33,8 +33,6 @@ public class Main {
 
             // 读取文件中的内容到字符串中
             String sb = readFile(pathName);
-            System.out.println("fileContent==============");
-            System.out.println(sb);
             // 获取字段内容："({" 中"{"开始对应的"}"中间的内容
             String fieldsContent = getFieldsContent(sb);
 
@@ -65,7 +63,6 @@ public class Main {
             }
             System.out.println("上传" + fileName + "表成功");
             System.out.println();
-            return;
         }
         System.out.println("全部上传成功");
     }
