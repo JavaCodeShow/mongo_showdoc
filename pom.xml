@@ -95,6 +95,9 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
                     <version>3.8.1</version>
                 </plugin>
                 <plugin>
@@ -102,7 +105,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>com.jf.EntityToMarkdown</mainClass>
+                                <mainClass>com.jf.Main</mainClass>
                             </manifest>
                         </archive>
                         <descriptorRefs>
@@ -110,41 +113,6 @@
                         </descriptorRefs>
                     </configuration>
                 </plugin>
-              <!--  <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                &lt;!&ndash; put third party jar package into the classpath of manifest &ndash;&gt;
-                                <addClasspath>true</addClasspath>
-                                &lt;!&ndash; 这个是打完jar包后依赖的jar包所处的位置 &ndash;&gt;
-                                <classpathPrefix>lib/</classpathPrefix>
-                                &lt;!&ndash; 这个是jar包需要运行的入口类。 &ndash;&gt;
-                                <mainClass>com.jf.EntityToMarkdown</mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>copy</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>copy-dependencies</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>
-                                    ${project.build.directory}/lib
-                                </outputDirectory>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>-->
             </plugins>
         </pluginManagement>
     </build>

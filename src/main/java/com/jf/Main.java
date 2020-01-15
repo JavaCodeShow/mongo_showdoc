@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * @author 江峰
  * @create 2020-01-10   13:08
  */
-public class EntityToMarkdown {
+public class Main {
     public static void main(String[] args) throws IOException {
         String dirName = judgeDirName(args);
 
@@ -33,7 +33,8 @@ public class EntityToMarkdown {
 
             // 读取文件中的内容到字符串中
             String sb = readFile(pathName);
-
+            System.out.println("fileContent==============");
+            System.out.println(sb);
             // 获取字段内容："({" 中"{"开始对应的"}"中间的内容
             String fieldsContent = getFieldsContent(sb);
 
@@ -64,6 +65,7 @@ public class EntityToMarkdown {
             }
             System.out.println("上传" + fileName + "表成功");
             System.out.println();
+            return;
         }
         System.out.println("全部上传成功");
     }
@@ -274,9 +276,9 @@ public class EntityToMarkdown {
      */
     static String readFile(String pathName) {
         try {
-            FileReader reader = new FileReader(pathName);
+            InputStreamReader isr = new InputStreamReader(new FileInputStream(pathName), "UTF-8");
+            BufferedReader br = new BufferedReader(isr);
             StringBuilder sb = new StringBuilder();
-            BufferedReader br = new BufferedReader(reader);
             String line;
             while ((line = br.readLine()) != null) {
                 // 一次读入一行数据,读取的一行数据为空时,就跳过重读一行。
@@ -302,7 +304,7 @@ public class EntityToMarkdown {
     static List<String> getEvenFieldContent(String fieldsContent) throws IOException {
         // 将字符串读取到字符流中
         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
-                fieldsContent.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
+                fieldsContent.getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8")));
         String line = "";
         StringBuilder tempString = new StringBuilder();
         boolean isMatch = false;
