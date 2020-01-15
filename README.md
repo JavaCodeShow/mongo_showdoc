@@ -4,19 +4,37 @@
 
    1. **上传到本地：**
 
-      在cmd黑窗口下执行：java -jar mongo_showdoc.jar   from   to
+      在cmd黑窗口下执行：
 
-      from为models的目录，to为将文件保存在哪个目录下。
+      ```
+      java -jar mongo_showdoc.jar from  to
+      ```
 
-      例如将文件保存在桌面: java -jar mongo_showdoc.jar H:\ioam\service\src\models C:\Users\Administrator\Desktop\models
+      from为models的目录路径，to为将文件保存在哪个目录下。
+
+      例如将文件保存在桌面:
+
+      ```
+       java -jar mongo_showdoc.jar H:\ioam\service\src\models  C:\Users\Administrator\Desktop\models
+      ```
+
+      
 
    2. **上传到showdoc: **
 
-      在cmd黑窗口下执行命令：java -jar mongo_showdoc.jar   from
+      在cmd黑窗口下执行命令：
 
-      from为models的目录
-
-      例如：java -jar mongo_showdoc.jar   H:\ioam\service\src\models 
+      ```
+   java -jar mongo_showdoc.jar from
+      ```
+      
+      from为models的目录路径
+      
+      例如：
+      
+      ```
+      java -jar mongo_showdoc.jar H:\ioam\service\src\models 
+      ```
 
 2. ## 注意事项
 
