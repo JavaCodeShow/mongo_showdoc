@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jf</groupId>
-    <artifactId>show_mongo</artifactId>
+    <artifactId>mongo_showdoc</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>show_mongo</name>
+    <name>mongo_showdoc</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
     <packaging>jar</packaging>
