@@ -3,18 +3,17 @@ package com.jf;
 import com.alibaba.fastjson.JSONObject;
 import com.jf.bean.MyField;
 import com.jf.config.RestTemplateConfig;
-import com.jf.conventer.WxMappingJackson2HttpMessageConverter;
-import com.jf.ssl.Myssl;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -52,11 +51,12 @@ public class EntityToMarkdown {
 
             // 转换为markdown语法
             String content = transObjToMarkdown(myFields, fileName);
-
+            System.out.println(content);
             System.out.println("开始上传" + fileName + "表");
             if (Objects.nonNull(uploadPath)) {
                 // 保存文件到本地
-                saveContentToFile(content, fileName);
+                String toPathName = uploadPath + "\\" + fileName + ".md";
+                saveContentToFile(content, toPathName);
             } else {
                 // 上传到showdoc
                 saveToShowdoc(content, fileName);
@@ -72,7 +72,7 @@ public class EntityToMarkdown {
      */
     static String judgeUploadPath(String[] args) {
         if (args.length > 1) {
-            String filedir = args[1];
+            String filedir = args[1].trim();
             File dir = new File(filedir);
             if (!dir.exists()) {
                 dir.mkdir();
@@ -86,7 +86,7 @@ public class EntityToMarkdown {
         if (args.length == 0) {
             Assert.isTrue(false, "请在java -jar xxx.jar后面输入数据库xxxEntity.js所在的model目录路径");
         }
-        String dirName = args[0];
+        String dirName = args[0].trim();
         File file = new File(dirName);
         if (!file.exists()) {
             Assert.isTrue(false, "输入的路径有误，请重新输入");
@@ -104,7 +104,7 @@ public class EntityToMarkdown {
         RestTemplate restTemplate = RestTemplateConfig.getRestTemplate();
         String url = "https://www.showdoc.cc/server/api/item/updateByApi";
         HttpEntity<Object> entity = buildRequest(content, fileName);
-        Map map = restTemplate.postForObject(url, entity, HashMap.class);
+        Object map = restTemplate.postForObject(url, entity, Object.class);
         // if (map.get())
         // System.out.println(map);
     }
@@ -127,10 +127,9 @@ public class EntityToMarkdown {
         return entity;
     }
 
-    static void saveContentToFile(String content, String fileName) {
+    static void saveContentToFile(String content, String toPathName) {
         //  文件保存路径
-        String savefile = "C:\\Users\\Administrator\\Desktop\\model\\" + fileName + ".md";
-        saveAsFileWriter(content, savefile);
+        saveAsFileWriter(content, toPathName);
     }
 
     /**
@@ -144,9 +143,7 @@ public class EntityToMarkdown {
         content.append("|字段信息 | 类型 | 必填 | 默认 | 备注信息 |" + "\r\n");
         content.append("|:----    |:-------    |:--- |-- -|------      |" + "\r\n");
         String str = content.toString();
-        System.out.println(str);
         str = addFieldContentToMarkdown(str, myFields);
-        System.out.println(str);
         return str;
     }
 
@@ -200,31 +197,31 @@ public class EntityToMarkdown {
         for (MyField myField : myFields) {
             content += "|" + myField.getName() + "|" + myField.getType() + "|" + myField.getRequired()
                     + "|" + myField.getDefaultValue() + "|" + myField.getComment() + "|\r\n";
-            System.out.println("-----");
-            System.out.println(content);
         }
         return content;
     }
 
-    public static void saveAsFileWriter(String content, String savefile) {
-        FileWriter fwriter = null;
+    public static void saveAsFileWriter(String content, String toPathName) {
         try {
-            File file = new File(savefile);
-            if (!file.exists()) {
-                file.createNewFile();
+            BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
+            //创建输入缓冲流对象，需要传入（输出）Writer对象，我们将使用转换流将字符流转为字节流
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(toPathName)));
+            //零时字符串
+            String tmp = "";
+            //BufferedReader提供一行一行的读入，当有空行的时候，返回null
+            while ((tmp = br.readLine()) != null) {
+                bw.write(tmp);
+                bw.newLine();//BufferedWriter提供的方法，新创一行
             }
-            fwriter = new FileWriter(savefile);
-            fwriter.write(content);
-        } catch (
-                IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                fwriter.flush();
-                fwriter.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            //刷新流缓冲，确保将流写完到硬盘中
+            bw.flush();
+            //关闭流
+            br.close();
+            bw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
